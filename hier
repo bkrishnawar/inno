@@ -1,0 +1,12 @@
+SELECT A.level, avg(S.salary)
+FROM
+(SELECT name, level(node) as level 
+ FROM HIERARCHY(
+  USING h_src as v
+  JOIN PARENT u ON v.pred = u.succ
+  SEARCH BY ord ASC
+  START WHERE pred is NULL
+  SET node
+ ) AS H) A, h_salaries S
+where A.name = S.name
+group by A.level
